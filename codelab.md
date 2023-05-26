@@ -372,13 +372,161 @@ Si d'aventure vous vouliez créer un jeu 2D, Flutter est un très candidat grâc
 
 ### Installer audioplayers
 
+Ouvrez votre terminal et exécutez la commande suivante.
+
 ```
-flutter pub add audioplayers:^4.0.0
+flutter pub add audioplayers
 ```
 
 ### Télécharger le son du métronome
 
+Télécharger le fichier MP3 au moyen du lien suivant:
+
 <a href="https://github.com/Zenika/codelab-flutter-metronome/tree/main/assets/metronome-sound.mp3" download>Télécharger le son du métronome</a>
+
+Placez ce fichier dans le dossier `assets` à la racine de votre projet. Le nom du dossier est important. Son nommage est contraint par la librairie `audioplayers` que nous utilisons.
+
+Modifiez ensuite le fichier `pubspec.yaml` afin que Flutter ait connaissance de cette ressource locale. Renseignez dans ce fichier une nouvelle entrée au niveau du paramètre `flutter.assets`:
+
+```yaml
+# pubspec.yaml
+
+flutter:
+  assets:
+    - assets/metronome-sound.mp3 # chemin vers le fichier MP3 précédemment tééchargé
+  # ...
+# ...
+```
+
+### Utiliser InheritedWidget en guise d'injection de dépendance
+
+```dart
+// lib/audio_player_provider.dart
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+
+class AudioPlayerProvider extends InheritedWidget {
+  static AudioPlayerProvider of(BuildContext context) {
+    final AudioPlayerProvider? result =
+        context.dependOnInheritedWidgetOfExactType<AudioPlayerProvider>();
+
+    if (result == null) {
+      throw 'No AudioPlayerProvider found';
+    }
+
+    return result;
+  }
+
+  static Future<AudioPlayer> createAudioPlayer() async {
+    final audioPlayer = AudioPlayer()
+      ..setPlayerMode(
+        PlayerMode.lowLatency,
+      );
+    await audioPlayer.setSource(AssetSource('metronome-sound.mp3'));
+    return audioPlayer;
+  }
+
+  final AudioPlayer audioPlayer;
+
+  const AudioPlayerProvider({
+    super.key,
+    required super.child,
+    required this.audioPlayer,
+  });
+
+  @override
+  bool updateShouldNotify(AudioPlayerProvider oldWidget) {
+    return false;
+  }
+}
+```
+
+### Injecter AudioPlayerProvider dans l'application
+
+```dart
+// lib/main.dart
+
+import 'package:flutter/material.dart';
+import 'package:metronome/audio_player_provider.dart';
+import 'package:metronome/ui/app.dart';
+
+// le point d'entrée de l'application devient asynchone afin que audioplayers charge correctement le son
+void main() async {
+
+  // cet appel est désormais nécessaire pour que Flutter s'assure que les widgets soient complètement initialisés
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    // on place AudioPlayerProvider à la racine de notre application afin que n'importe quel widget de notre application puisse accéder à AudioPlayer
+    AudioPlayerProvider(
+      audioPlayer: await AudioPlayerProvider.createAudioPlayer(),
+      child: const App(),
+    ),
+  );
+}
+```
+
+### Jouer le son du métronome
+
+```dart
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:metronome/audio_player_provider.dart';
+
+class RhythmToggleButton extends StatefulWidget {
+  const RhythmToggleButton({super.key});
+
+  static Duration getRhythmInterval(int rhythm) =>
+      Duration(milliseconds: ((60 / rhythm) * 1000).toInt());
+
+  @override
+  State<RhythmToggleButton> createState() => _RhythmToggleButtonState();
+}
+
+class _RhythmToggleButtonState extends State<RhythmToggleButton> {
+  bool isPlaying = false;
+  Timer? periodicTimer;
+
+  @override
+  void didChangeDependencies() {
+    final audioPlayer = AudioPlayerProvider.of(context).audioPlayer;
+    periodicTimer?.cancel();
+    periodicTimer = Timer.periodic(
+      RhythmToggleButton.getRhythmInterval(50),
+      (_) {
+        if (isPlaying) {
+          audioPlayer.stop();
+          audioPlayer.resume();
+        }
+      },
+    );
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          isPlaying = !isPlaying;
+        });
+      },
+      child: Icon(
+        isPlaying ? Icons.pause : Icons.play_arrow,
+        size: 120,
+      ),
+    );
+  }
+}
+```
+
+<aside class="negative">
+Comme nous venons de modifier le point d'entrée de notre application et que nous avons ajouté une nouvelle ressource, il est important que vous interrompiez votre application en cours d'exécution, et que vous la redémarriez complètement.
+</aside>
+
+Désormais, lorsque vous appuyez sur le bouton "Lecture", le son démarre et il s'interrompt dès lors que vous appuyez sur le bouton "Pause".
 
 <!-- ------------------------ -->
 
