@@ -534,6 +534,29 @@ Désormais, lorsque vous appuyez sur le bouton "Lecture", le son démarre et il 
 
 Duration: 2
 
+Durant cette section, nous allons apprendre comment l'association d'un _Stateful Widget_ et d'un _Inherited Widget_ peut faire office de solution simple de state management.
+
+J'ai découvert cette approche grâce à cette vidéo officielle et je la trouve particulièrement intéressante pour illustrer le fonctionnement des widgets natifs de Flutter:
+
+<a href="https://www.youtube.com/watch?v=LFcGPS6cGrY">
+  <img src="assets/state_management_workshop.png" alt="How to manage application states using inherited widgets | Workshop" width="500" />
+</a>
+
+L'approche que je vais présenter ne supplante en aucun cas les formidables (et nombreuses) librairies qui existent dans l'écosystème Flutter.
+
+Les solutions de state management en Flutter sont nombreuses et il n'est pas simple de faire son choix. Le contexte de votre application déterminera éventuellement une approche adaptée.
+
+Pour se faire une 1ère idée de la question et commencer à explorer le sujet, cette [documentation Flutter](https://docs.flutter.dev/data-and-backend/state-mgmt/simple) est instructive, la librairie [provider](https://pub.dev/packages/provider) étant souvent l'approche recommandée pour un débutant sur le framework.
+
+Ci dessous d'autres librairies très populaires, chacune ayant une approche différente:
+
+- [riverpod](https://pub.dev/packages/riverpod) (anagramme de _provider_ - c'est la V2)
+- [flutter_bloc](https://pub.dev/packages/flutter_bloc)
+- [flutter_redux](https://pub.dev/packages/flutter_redux)
+- [mobX](https://pub.dev/packages/mobx)
+
+La liste n'est pas exhaustive 😅.
+
 TODO
 
 <!-- ------------------------ -->
