@@ -14,11 +14,11 @@ Feedback Link: https://github.com/Zenika/codelab-flutter-metronome/issues
 
 Duration: 2
 
-![Logo Flutter](./images/flutter-logo.png)
+![Logo Flutter](./assets/flutter-logo.png)
 
 ### Ce que vous allez réaliser
 
-<img src="./images/layout_phone.png" width="300">
+<img src="./assets/layout_phone.png" width="300">
 
 <!-- ------------------------ -->
 
@@ -271,7 +271,7 @@ class App extends StatelessWidget {
 }
 ```
 
-<img src="./images/layout_phone.png" width="300">
+<img src="./assets/layout_phone.png" width="300">
 
 <!-- ------------------------ -->
 
@@ -359,16 +359,26 @@ Pour choisir une librairie, 2 sites sont à connaître:
 
 Pour jouer le son du métronome, je jette mon dévolu sur la librairie [audioplayers](https://github.com/bluefireteam/audioplayers) que j'ai déjà utilisé sur un projet [Flame](https://docs.flame-engine.org/latest/) pour réaliser un jeu 2D avec Flutter. Cette librairie va nous permettre de facilement jouer un son provenant de nos ressources locales.
 
-![Fluttergems](./images/fluttergems.png)
+![Fluttergems](./assets/fluttergems.png)
 
 <aside class="positive">
 <div>
-  <img src="./images/flame.png" width="100" alt="logo flame" />
+  <img src="./assets/flame.png" width="100" alt="logo flame" />
 </div>
 
 Si d'aventure vous vouliez créer un jeu 2D, Flutter est un très candidat grâce au moteur de jeu <a href="https://docs.flame-engine.org/latest/">Flame</a>.
 
 </aside>
+
+### Installer audioplayers
+
+```
+flutter pub add audioplayers:^4.0.0
+```
+
+### Télécharger le son du métronome
+
+<a href="https://github.com/Zenika/codelab-flutter-metronome/tree/main/assets/metronome-sound.mp3" download>Télécharger le son du métronome</a>
 
 <!-- ------------------------ -->
 
