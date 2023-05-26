@@ -348,7 +348,27 @@ class App extends StatelessWidget {
 
 Duration: 2
 
-TODO
+L'enjeu de cette section est de jouer le son du métronome à intervalle régulier.
+
+J'imagine qu'il serait possible de coder le lancement du son en pur Dart. Ceci dit, pour se faciliter la tâche, nous allons plutôt installer une librairie.
+
+Pour choisir une librairie, 2 sites sont à connaître:
+
+- l'incontournable [pub.dev](https://pub.dev/): c'est le site officiel répertoriant tous les paquets Dart et Flutter
+- [fluttergems](https://fluttergems.dev/): j'apprécie ce site pour explorer le champ des possibles, sans trop savoir quel sera la librairie de mon choix. L'UI et les critères de recherche de ce site me paraissent plus intuitifs que le site officiel [pub.dev](https://pub.dev/). Je le recommande donc si vous ne savez pas trop quoi chercher.
+
+Pour jouer le son du métronome, je jette mon dévolu sur la librairie [audioplayers](https://github.com/bluefireteam/audioplayers) que j'ai déjà utilisé sur un projet [Flame](https://docs.flame-engine.org/latest/) pour réaliser un jeu 2D avec Flutter. Cette librairie va nous permettre de facilement jouer un son provenant de nos ressources locales.
+
+![Fluttergems](./images/fluttergems.png)
+
+<aside class="positive">
+<div>
+  <img src="./images/flame.png" width="100" alt="logo flame" />
+</div>
+
+Si d'aventure vous vouliez créer un jeu 2D, Flutter est un très candidat grâce au moteur de jeu <a href="https://docs.flame-engine.org/latest/">Flame</a>.
+
+</aside>
 
 <!-- ------------------------ -->
 
