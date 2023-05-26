@@ -24,7 +24,7 @@ Duration: 2
 
 ## Configurer l’environnement
 
-Duration: 2
+Duration: 1
 
 ```
 flutter doctor
@@ -37,6 +37,8 @@ rm -rf test
 <!-- ------------------------ -->
 
 ## Ajouter les premiers composants structurants
+
+Duration: 15
 
 ### Afficher "Hello Flutter"
 
@@ -305,7 +307,7 @@ class App extends StatelessWidget {
 
 ## Rendre l’application responsive
 
-Duration: 2
+Duration: 10
 
 ### Utiliser le widget LayoutBuilder
 
@@ -374,7 +376,7 @@ class App extends StatelessWidget {
 
 ## Jouer un son à intervalle régulier
 
-Duration: 2
+Duration: 20
 
 L'enjeu de cette section est de jouer le son du métronome à intervalle régulier.
 
@@ -537,6 +539,12 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
   }
 
   @override
+  void dispose() {
+    periodicTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
@@ -563,7 +571,7 @@ Désormais, lorsque vous appuyez sur le bouton "Lecture", le son démarre et il 
 
 ## Modifier le rythme du métronome
 
-Duration: 2
+Duration: 20
 
 Durant cette section, nous allons apprendre comment l'association d'un _Stateful Widget_ et d'un _Inherited Widget_ peut faire office de solution simple en matière de state management.
 
@@ -800,7 +808,7 @@ Nous allons ensuite réaliser quelques tests automatisés afin de garantir la fi
 
 ## Tester les fonctionnalités du métronome
 
-Duration: 2
+Duration: 15
 
 Flutter distingue 3 types de tests dans [sa documentation](https://docs.flutter.dev/testing):
 
@@ -885,11 +893,19 @@ flutter test
 
 Le test devrait passer.
 
+### Tester notre application au moyen d'un test de widget
+
+Notre application est petite et comporte peu de dépendance, peu de widgets.
+
+Pour tester le fonctionnement global de notre application, je vous propose tout simplement de monter notre application entièrement et d'effectuer des assertions sur l'ensemble de nos widgets.
+
+Cela nous apportera un degré de confiance important en nous rapprochant un peu des conditions réelles de fonctionnement de notre application. Le test ne sera pas aussi fidèle qu'un test d'intégration (fidèle vis à vis du fonctionnement de l'application en condition réelle). Néanmoins, cette préférence pour le test de widget va nous permettre de converver une batterie de tests véloce et plus stable (car ne nécessitant pas de démarrer un simulateur en parallèle).
+
 <!-- ------------------------ -->
 
 ## Exécuter les tests en CI
 
-Duration: 2
+Duration: 15
 
 TODO
 
@@ -899,4 +915,14 @@ TODO
 
 Duration: 2
 
-TODO
+Félicitations !
+
+Vous venez de réaliser un métronome avc Flutter, en veillant à tester les fontionnalités de votre application et en intégrant ces tests dans une pipeline d'intégration continue.
+
+A partir de là, le champ des possibles est ouvert. On peut imaginer par exemple mettre en place une pipeline de déploiement continu au moyen de Codemagic, afin de publier automatiquement sur Android et iOS.
+
+Si vous avez des idées d'évolution, ou des remarques sur ce codelab, n'hésitez pas à les partager directement sur le dépôt en créant un [ticket](https://github.com/Zenika/codelab-flutter-metronome/issues/new).
+
+Si vous voulez continuer votre exploration de Flutter, sachez que les ressources pour en apprendre davantage sont innombrables, que le monde de Flutter est un peu comme le monde de Zelda. Un monde libre et ouvert dans lequel le champ des possibles est sans frontières. Bonne exploration.
+
+Happy creating !
