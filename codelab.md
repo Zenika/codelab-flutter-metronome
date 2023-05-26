@@ -117,12 +117,39 @@ class App extends StatelessWidget {
 }
 ```
 
+### Créer un fichier pour stocker les constantes de notre application
+
+Nous allons créer un fichier pour stocker quelques constantes. En soi, la séparation de ces constantes dans un fichier à part n'est pas nécessaire, si ce n'est que nous allons réaliser des tests à la fin du codelab. Nous aurons besoin d'accéder à certaines constantes lors de nos tests pour effectuer quelques assertions.
+
+Je vous propose donc d'anticiper dès maintenant la création du fichier `lib/constants.dart`. Le fichier final contiendra ces 5 constantes:
+
+```dart
+// lib/constants.dart
+import 'package:flutter/material.dart';
+
+// représente le rythme du métronome par défaut quand on arrive dans l'application
+const kDefaultRhythm = 50;
+
+// rythme minimum du métronome
+const kMinRhythm = 30;
+
+// rythme maximum du métronome
+const kMaxRhythm = 200;
+
+// icône du bouton "lecture"
+const kPlayIcon = Icons.play_arrow;
+
+// icône du bouton "pause"
+const kPauseIcon = Icons.pause;
+```
+
 ### Afficher le "slider" permettant de modifier le rythme
 
 ```dart
 // lib/ui/rhythm_slider.dart
 
 import 'package:flutter/material.dart';
+import 'package:metronome/constants.dart';
 
 class RhythmSlider extends StatelessWidget {
   const RhythmSlider({super.key});
@@ -130,8 +157,8 @@ class RhythmSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slider(
       value: 50,
-      min: 30,
-      max: 200,
+      min: kMinRhythm.toDouble(),
+      max: kMaxRhythm.toDouble(),
       onChanged: (value) {},
     );
   }
@@ -171,18 +198,19 @@ class App extends StatelessWidget {
 ### Afficher le bouton permettant de démarrer/arrêter le métronome
 
 ```dart
-// lib/ui/rhythm_toggle_button.dart
+// lib/ui/sound_toggle_button.dart
 
 import 'package:flutter/material.dart';
+import 'package:metronome/constants.dart';
 
-class RhythmToggleButton extends StatefulWidget {
-  const RhythmToggleButton({super.key});
+class SoundToggleButton extends StatefulWidget {
+  const SoundToggleButton({super.key});
 
   @override
-  State<RhythmToggleButton> createState() => _RhythmToggleButtonState();
+  State<SoundToggleButton> createState() => _SoundToggleButtonState();
 }
 
-class _RhythmToggleButtonState extends State<RhythmToggleButton> {
+class _SoundToggleButtonState extends State<SoundToggleButton> {
   bool isPlaying = false;
   @override
   Widget build(BuildContext context) {
@@ -193,7 +221,7 @@ class _RhythmToggleButtonState extends State<RhythmToggleButton> {
         });
       },
       child: Icon(
-        isPlaying ? Icons.pause : Icons.play_arrow,
+        isPlaying ? kPauseIcon : kPlayIcon,
         size: 120,
       ),
     );
@@ -207,7 +235,7 @@ class _RhythmToggleButtonState extends State<RhythmToggleButton> {
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
 import 'package:metronome/ui/rhythm_slider.dart';
-import 'package:metronome/ui/rhythm_toggle_button.dart'; // importer RhythmToggleButton
+import 'package:metronome/ui/sound_toggle_button.dart'; // importer SoundToggleButton
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -224,7 +252,7 @@ class App extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: RhythmSlider(),
             ),
-            RhythmToggleButton(), // utiliser RhythmToggleButton
+            SoundToggleButton(), // utiliser SoundToggleButton
           ],
         ),
       ),
@@ -241,7 +269,7 @@ class App extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
 import 'package:metronome/ui/rhythm_slider.dart';
-import 'package:metronome/ui/rhythm_toggle_button.dart'; // importer RhythmToggleButton
+import 'package:metronome/ui/sound_toggle_button.dart'; // importer SoundToggleButton
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -262,7 +290,7 @@ class App extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: RhythmSlider(),
             ),
-            RhythmToggleButton(), // utiliser RhythmToggleButton
+            SoundToggleButton(), // utiliser SoundToggleButton
           ],
         ),
       ),
@@ -287,7 +315,7 @@ Duration: 2
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
 import 'package:metronome/ui/rhythm_slider.dart';
-import 'package:metronome/ui/rhythm_toggle_button.dart';
+import 'package:metronome/ui/sound_toggle_button.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -318,7 +346,7 @@ class App extends StatelessWidget {
                     ],
                   ),
                 ),
-                RhythmToggleButton(),
+                SoundToggleButton(),
               ],
             );
           }
@@ -332,7 +360,7 @@ class App extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: RhythmSlider(),
               ),
-              RhythmToggleButton(),
+              SoundToggleButton(),
             ],
           );
         }),
@@ -470,22 +498,25 @@ void main() async {
 ### Jouer le son du métronome
 
 ```dart
+// lib/ui/sound_toggle_button.dart
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:metronome/constants.dart';
 import 'package:metronome/audio_player_provider.dart';
 
-class RhythmToggleButton extends StatefulWidget {
-  const RhythmToggleButton({super.key});
+class SoundToggleButton extends StatefulWidget {
+  const SoundToggleButton({super.key});
 
   static Duration getRhythmInterval(int rhythm) =>
       Duration(milliseconds: ((60 / rhythm) * 1000).toInt());
 
   @override
-  State<RhythmToggleButton> createState() => _RhythmToggleButtonState();
+  State<SoundToggleButton> createState() => _SoundToggleButtonState();
 }
 
-class _RhythmToggleButtonState extends State<RhythmToggleButton> {
+class _SoundToggleButtonState extends State<SoundToggleButton> {
   bool isPlaying = false;
   Timer? periodicTimer;
 
@@ -494,7 +525,7 @@ class _RhythmToggleButtonState extends State<RhythmToggleButton> {
     final audioPlayer = AudioPlayerProvider.of(context).audioPlayer;
     periodicTimer?.cancel();
     periodicTimer = Timer.periodic(
-      RhythmToggleButton.getRhythmInterval(50),
+      SoundToggleButton.getRhythmInterval(50),
       (_) {
         if (isPlaying) {
           audioPlayer.stop();
@@ -514,7 +545,7 @@ class _RhythmToggleButtonState extends State<RhythmToggleButton> {
         });
       },
       child: Icon(
-        isPlaying ? Icons.pause : Icons.play_arrow,
+        isPlaying ? kPauseIcon : kPlayIcon,
         size: 120,
       ),
     );
@@ -534,7 +565,7 @@ Désormais, lorsque vous appuyez sur le bouton "Lecture", le son démarre et il 
 
 Duration: 2
 
-Durant cette section, nous allons apprendre comment l'association d'un _Stateful Widget_ et d'un _Inherited Widget_ peut faire office de solution simple de state management.
+Durant cette section, nous allons apprendre comment l'association d'un _Stateful Widget_ et d'un _Inherited Widget_ peut faire office de solution simple en matière de state management.
 
 J'ai découvert cette approche grâce à cette vidéo officielle et je la trouve particulièrement intéressante pour illustrer le fonctionnement des widgets natifs de Flutter:
 
@@ -557,7 +588,213 @@ Ci dessous d'autres librairies très populaires, chacune ayant une approche diff
 
 La liste n'est pas exhaustive 😅.
 
-TODO
+### Inherited Widget + Stateful Widget = Simple state management
+
+### Création de RhythmStore
+
+```dart
+// lib/store/rhythm_store.dart
+
+import 'package:flutter/material.dart';
+
+class RhythmStore extends InheritedWidget {
+  static RhythmStore of(BuildContext context) {
+    final RhythmStore? result =
+        context.dependOnInheritedWidgetOfExactType<RhythmStore>();
+
+    if (result == null) {
+      throw 'No RhythmStore found';
+    }
+
+    return result;
+  }
+
+  final int rhythm;
+
+  const RhythmStore({
+    super.key,
+    required super.child,
+    required this.rhythm,
+  });
+
+  @override
+  bool updateShouldNotify(RhythmStore oldWidget) {
+    return rhythm != oldWidget.rhythm;
+  }
+}
+```
+
+### Création de RhythmProvider
+
+```dart
+// lib/store/rhythm_provider.dart
+
+import 'package:flutter/material.dart';
+import 'package:metronome/constants.dart';
+import 'package:metronome/store/rhythm_store.dart';
+
+class RhythmProvider extends StatefulWidget {
+  static RhythmProviderState of(BuildContext context) {
+    final result = context.findAncestorStateOfType<RhythmProviderState>();
+    if (result == null) {
+      throw 'RythmProviderState ancestor has not been found';
+    }
+
+    return result;
+  }
+
+  final Widget child;
+
+  const RhythmProvider({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  State<RhythmProvider> createState() => RhythmProviderState();
+}
+
+class RhythmProviderState extends State<RhythmProvider> {
+  int _rhythm = kDefaultRhythm;
+
+  void updateRhythm(int val) {
+    setState(() {
+      _rhythm = val;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RhythmStore(
+      rhythm: _rhythm,
+      child: widget.child,
+    );
+  }
+}
+```
+
+### Injection de RhythmProvider à la racine de notre application
+
+```dart
+// lib/main.dart
+
+import 'package:flutter/material.dart';
+import 'package:metronome/audio_player_provider.dart';
+import 'package:metronome/store/rhythm_provider.dart';
+import 'package:metronome/ui/app.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    AudioPlayerProvider(
+      audioPlayer: await AudioPlayerProvider.createAudioPlayer(),
+      child: const RhythmProvider(
+        child: App(),
+      ),
+    ),
+  );
+}
+```
+
+### Utilisation de RhythmStore pour afficher le rythme du métronome
+
+Ouvrez le fichier `lib/ui/rhythm_label.dart` et remplacer la valeur actuelle du rythme qui est codée en dur par la valeur du rythme provenant de `RhythmStore`.
+
+```dart
+// lib/ui/rhythm_label.dart
+
+import 'package:flutter/material.dart';
+import 'package:metronome/store/rhythm_store.dart'; // importer RhythmStore
+
+class RhythmLabel extends StatelessWidget {
+
+  const RhythmLabel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      // permet d'accéder à la valeur actualisée du rythme
+      RhythmStore.of(context).rhythm.toString(),
+      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+            fontSize: 80,
+            fontWeight: FontWeight.bold,
+          ),
+    );
+  }
+}
+```
+
+### Lier le slider à notre solution de state management
+
+Nous allons modifier le composant permettant de modifier le rythme du métronome. Pour le moment, la valeur associée au widget `Slider` est statique. Nous allons changer cela en l'associant à notre solution de state management.
+
+```dart
+// lib/ui/rhythm_slider.dart
+
+import 'package:flutter/material.dart';
+import 'package:metronome/constants.dart';
+import 'package:metronome/store/rhythm_provider.dart';
+import 'package:metronome/store/rhythm_store.dart';
+
+class RhythmSlider extends StatelessWidget {
+
+  const RhythmSlider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+      min: kMinRhythm.toDouble(),
+      max: kMaxRhythm.toDouble(),
+      // utiliser RhythmStore pour RÉCUPÉRER la valeur du rythme
+      value: RhythmStore.of(context).rhythm.toDouble(),
+      onChanged: (double value) =>
+          // utiliser RhythmProvider pour MODIFIER la valeur du rythme
+          RhythmProvider.of(context).updateRhythm(value.toInt()),
+    );
+  }
+}
+```
+
+### Lier le bouton de contrôle du son à notre solution de state management
+
+```dart
+// lib/ui/sound_toggle_button.dart
+
+// importer RhythmStore
+import 'package:metronome2/store/rhythm_store.dart';
+
+class SoundToggleButton extends StatefulWidget {
+    // ...
+}
+
+class _SoundToggleButtonState extends State<SoundToggleButton> {
+
+  // ...
+
+  @override
+  void didChangeDependencies() {
+    final audioPlayer = AudioPlayerProvider.of(context).audioPlayer;
+    periodicTimer?.cancel();
+    periodicTimer = Timer.periodic(
+      // récupérer la valeur courante du rythme
+      SoundToggleButton.getRhythmInterval(RhythmStore.of(context).rhythm),
+      (_) {
+        if (isPlaying) {
+          audioPlayer.stop();
+          audioPlayer.resume();
+        }
+      },
+    );
+    super.didChangeDependencies();
+  }
+
+  // ...
+}
+```
+
+Félicitations 🎉 ! A ce stade là, les fonctionnalités de l'application sont complètes.
+
+Nous allons ensuite réaliser quelques tests automatisés afin de garantir la fiabilité de l'application.
 
 <!-- ------------------------ -->
 
