@@ -802,7 +802,88 @@ Nous allons ensuite réaliser quelques tests automatisés afin de garantir la fi
 
 Duration: 2
 
-TODO
+Flutter distingue 3 types de tests dans [sa documentation](https://docs.flutter.dev/testing):
+
+- **les tests unitaires**: tests permettant de tester des fonctions logiques, n'impliquant pas d'afficher visuellement des éléments.
+- **les tests de widgets**: tests consistant à monter un widget et à vérifier que celui-ci se comporte correctement
+- **les tests d'intégration**: tests qui consistent à démarrer l'application sur un appareil physique ou un simulateur, et à vérifier en condition "réelle" que l'application se comporte correctement
+
+Chacun de ces types de tests est important. Ils sont complémentaires les uns des autres. Chacun d'eux a ses avantages et ses inconvénients, sous le rapport de **la rapidité d'exécution**, **la maintenabilité du test** ou le **degré de confiance qu'il apporte**.
+
+|                            | **UNITAIRES** | **WIDGETS** | **INTÉGRATION** |
+| -------------------------- | ------------- | ----------- | --------------- |
+| **Rapidité d'exécution**   | rapide        | rapide      | lent            |
+| **Maintenabilité du test** | facile        | moyenne     | difficile       |
+| **Degré de confiance**     | faible        | modérée     | élevée          |
+
+Les tests unitaires et les tests de widget nécessitent d'avoir `flutter_test` en dépendance de dev, ce qui est déjà le cas car la dépendance est installée d'office par Flutter.
+
+Dans le cadre de ce codelab, nous ne ferons pas de tests d'intégration. L'application étant petite, les tests de widgets que nous allons réaliser me semblent couvrir suffisamment les fonctionnalités de l'application.
+
+### Rédiger un test unitaire
+
+Commençons simplement par un court test unitaire afin de rentrer tranquillement dans le sujet. Nous n'avons pas beaucoup de logique métier.
+
+J'identifie malgré tout une fonction susceptible d'être testée unitairement: la fonction statique retournant la durée en milliseconde d'un intervalle entre 2 battemants de métronome.
+
+Il s'agit de la méthode `getRhythmInterval` en provenance de la classe `SoundToggleButton`:
+
+```dart
+// lib/ui/sound_toggle_button.dart
+
+// ...
+
+class SoundToggleButton extends StatefulWidget {
+  const SoundToggleButton({super.key});
+
+  static Duration getRhythmInterval(int rhythm) =>
+      Duration(milliseconds: ((60 / rhythm) * 1000).toInt());
+
+  @override
+  State<SoundToggleButton> createState() => _SoundToggleButtonState();
+}
+```
+
+Nous allons tester cette fonction et vérifier qu'elle se comporte correctement.
+
+Le nom d'un fichier de test doit absolument être suffixé par `_test` pour être reconnu comme un test. C'est une convention.
+
+Créons donc un fichier `test/unit/sound_toggle_button_test.dart`:
+
+```dart
+// test/unit/sound_toggle_button_test.dart
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:metronome2/ui/sound_toggle_button.dart';
+
+void main() {
+  test('getRhythmInterval function returns appropriate Duration', () {
+    expect(
+      SoundToggleButton.getRhythmInterval(60),
+      equals(
+        const Duration(seconds: 1),
+      ),
+    );
+
+    expect(
+      SoundToggleButton.getRhythmInterval(120),
+      equals(
+        const Duration(milliseconds: 500),
+      ),
+    );
+  });
+}
+```
+
+Le 1er paramètre de la fonction `expect` correspond à votre donnée de référence (ce que vous voulez tester). Le 2nd paramètre correspond au résultat attendu.
+
+Pour exécuter le test, ouvrez votre terminal et exécutez la commande:
+
+```
+flutter test
+```
+
+Le test devrait passer.
 
 <!-- ------------------------ -->
 
