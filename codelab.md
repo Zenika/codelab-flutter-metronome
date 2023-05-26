@@ -110,9 +110,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-            child: RhythmLabel(), // remplacer le texte précédent par RhythmLabel
-        ),
+        body: RhythmLabel(), // remplacer le texte précédent par RhythmLabel
       ),
     );
   }
@@ -153,18 +151,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
+        body: Column(
           // utiliser Column pour afficher plusieurs widgets dans une colonne
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RhythmLabel(),
-              Padding( // ajouter un peu d'espacement en haut et en bas du slider
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: RhythmSlider(), // utiliser RhythmSlider
-              ),
-            ],
-          ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RhythmLabel(),
+            Padding( // ajouter un peu d'espacement en haut et en bas du slider
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: RhythmSlider(), // utiliser RhythmSlider
+            ),
+          ],
         ),
       ),
     );
@@ -220,18 +216,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RhythmLabel(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: RhythmSlider(),
-              ),
-              RhythmToggleButton(), // utiliser RhythmToggleButton
-            ],
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RhythmLabel(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: RhythmSlider(),
+            ),
+            RhythmToggleButton(), // utiliser RhythmToggleButton
+          ],
         ),
       ),
     );
@@ -260,18 +254,16 @@ class App extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false, // dissimule la bannière "debug"
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RhythmLabel(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: RhythmSlider(),
-              ),
-              RhythmToggleButton(), // utiliser RhythmToggleButton
-            ],
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RhythmLabel(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: RhythmSlider(),
+            ),
+            RhythmToggleButton(), // utiliser RhythmToggleButton
+          ],
         ),
       ),
     );
