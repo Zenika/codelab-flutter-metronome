@@ -769,7 +769,7 @@ class RhythmSlider extends StatelessWidget {
 // lib/ui/sound_toggle_button.dart
 
 // importer RhythmStore
-import 'package:metronome2/store/rhythm_store.dart';
+import 'package:metronome/store/rhythm_store.dart';
 
 class SoundToggleButton extends StatefulWidget {
     // ...
@@ -862,7 +862,7 @@ Créons donc un fichier `test/unit/sound_toggle_button_test.dart`:
 // test/unit/sound_toggle_button_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metronome2/ui/sound_toggle_button.dart';
+import 'package:metronome/ui/sound_toggle_button.dart';
 
 void main() {
   test('getRhythmInterval function returns appropriate Duration', () {
@@ -900,6 +900,176 @@ Notre application est petite et comporte peu de dépendance, peu de widgets.
 Pour tester le fonctionnement global de notre application, je vous propose tout simplement de monter notre application entièrement et d'effectuer des assertions sur l'ensemble de nos widgets.
 
 Cela nous apportera un degré de confiance important en nous rapprochant un peu des conditions réelles de fonctionnement de notre application. Le test ne sera pas aussi fidèle qu'un test d'intégration (fidèle vis à vis du fonctionnement de l'application en condition réelle). Néanmoins, cette préférence pour le test de widget va nous permettre de converver une batterie de tests véloce et plus stable (car ne nécessitant pas de démarrer un simulateur en parallèle).
+
+Qu'allons nous tester ? Pour répondre à cette question, interrogeons nous sur ce qui constitue le coeur de notre application.
+
+1. mon application affiche le rythme du métronome
+2. le son est joué à intervalle régulier en fonction du rythme sélectionné
+3. je peux modifier le rythme du métronome
+
+La complexité des tests va principalement résider dans la détection du son et la vérification de la régularité du son produit. Pour parvenir à nos fins, nous allons mocker l'instance de `AudioPlayer` injectée dans l'application.
+
+Il existe plusieurs librairies de mocks. Nous allons utiliser [mocktail](https://github.com/felangel/mocktail) (qui est inspirée de [mockito](https://github.com/dart-lang/mockito) que maintient Dart).
+
+Installez la dépendance `mocktail`:
+
+```
+flutter pub add mocktail
+```
+
+Créer un fichier `test/widget/app_test.dart`.
+
+Nous allons rédiger un 1er test de widget simple afin de tester l'état initial de l'application.
+
+#### Tester l'état initial de l'application
+
+```dart
+// test/widget/app_test.dart
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:metronome/audio_player_provider.dart';
+import 'package:metronome/constants.dart';
+import 'package:metronome/store/rhythm_provider.dart';
+import 'package:metronome/ui/app.dart';
+import 'package:metronome/ui/sound_toggle_button.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockAudioPlayer extends Mock implements AudioPlayer {}
+
+createApp() {
+  final audioPlayer = MockAudioPlayer();
+
+  when(() => audioPlayer.stop()).thenAnswer((_) async {});
+  when(() => audioPlayer.resume()).thenAnswer((_) async {});
+
+  return (
+    app: AudioPlayerProvider(
+      audioPlayer: audioPlayer,
+      child: const RhythmProvider(
+        child: App(),
+      ),
+    ),
+    audioPlayer: audioPlayer,
+  );
+}
+
+void main() {
+  testWidgets('App default state OK', (tester) async {
+    // déstructuration du Record retourné par createApp
+    final (:app, audioPlayer: _) = createApp();
+
+    // monte notre application
+    await tester.pumpWidget(app);
+
+    // méthode utilitaire permettant de "flusher" toutes les frames en attente
+    await tester.pumpAndSettle();
+
+    // vérifie que le rythme affiché est égal au rythme par défaut
+    expect(find.text(kDefaultRhythm.toString()), findsOneWidget);
+
+    // vérifie que l'icône initial est le bouton "Lecture"
+    expect(
+      find.byIcon(kPlayIcon),
+      findsOneWidget,
+    );
+  });
+}
+```
+
+<aside class="positive">
+Le retour de la méthode <em>createApp</em> est de type <a href="https://dart.dev/language/patterns">Record</a>. C'est un nouveau type introduit par Dart 3. Il permet de retourner plusieurs valeurs en même temps sans avoir à forcément structurer ces valeurs au sein d'une classe (rendant le code moins verbeux).
+
+Les <a href="https://dart.dev/language/patterns">Records</a> sont une grande avancée pour Dart 3 et sont complémentaires des <a href="https://dart.dev/language/patterns">Patterns</a>, eux aussi introduits dans Dart 3. La déstructuration du retour du <em>createApp</em> lors du test est un exemple parmi d'autres de pattern matching.
+
+</aside>
+
+#### Tester la régularité du son
+
+```dart
+// test/widget/app_test.dart
+
+// ...
+void main () {
+ // ...
+
+ testWidgets('when I click on play button, a sound is emitted regularly',
+      (tester) async {
+    final (:app, :audioPlayer) = createApp();
+    await tester.pumpWidget(app);
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(kPlayIcon));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byIcon(kPlayIcon),
+      findsNothing,
+    );
+
+    expect(
+      find.byIcon(kPauseIcon),
+      findsOneWidget,
+    );
+
+    await tester.pump(SoundToggleButton.getRhythmInterval(kDefaultRhythm) * 2);
+    verifyInOrder([
+      () => audioPlayer.stop(),
+      () => audioPlayer.resume(),
+      () => audioPlayer.stop(),
+      () => audioPlayer.resume(),
+    ]);
+
+    await tester.tap(find.byIcon(kPauseIcon));
+
+    await tester.pump(SoundToggleButton.getRhythmInterval(kDefaultRhythm) * 2);
+
+    verifyNoMoreInteractions(audioPlayer);
+  });
+}
+```
+
+#### Tester la modification du rythme au moyen du slider
+
+```dart
+// test/widget/app_test.dart
+
+// ...
+void main() {
+ // ...
+ testWidgets('with the slider, I can update the rhythm', (tester) async {
+    final (:app, :audioPlayer) = createApp();
+    await tester.pumpWidget(app);
+
+    await tester.pumpAndSettle();
+
+    await tester.dragUntilVisible(
+      find.text(kMinRhythm.toString()), // what you want to find
+      find.byType(Slider), // widget you want to scroll
+      const Offset(-300, 0), // delta to move
+    );
+    expect(find.text(kMinRhythm.toString()), findsOneWidget);
+
+    await tester.pumpAndSettle();
+
+    verifyZeroInteractions(audioPlayer);
+
+    await tester.tap(find.byIcon(kPlayIcon));
+
+    await tester.pump(SoundToggleButton.getRhythmInterval(kMinRhythm) * 5);
+    verify(() => audioPlayer.stop()).called(5);
+    verify(() => audioPlayer.resume()).called(5);
+  });
+}
+```
+
+Ouvrez votre terminal et exécutez la commande:
+
+```
+flutter test
+```
 
 <!-- ------------------------ -->
 
