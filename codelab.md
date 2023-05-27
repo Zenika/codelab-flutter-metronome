@@ -1071,13 +1071,71 @@ Ouvrez votre terminal et exécutez la commande:
 flutter test
 ```
 
+Bravo ! Vous avez désormais des tests sur votre application.
+
 <!-- ------------------------ -->
 
 ## Exécuter les tests en CI
 
 Duration: 15
 
-TODO
+Durant cette section, nous allons configurer une pipeline d'intgération continue afin d'exécuter automatiquement l'analyse statique de code, les tests unitaires et les tests de widget.
+
+Pour Flutter, plusieurs solutions s'offrent à nous, parmi lesquelles:
+
+- [Bitrise](https://bitrise.io/)
+- [Github Actions](https://github.com/features/actions)
+- [Codemagic](https://codemagic.io/)
+
+Pour notre besoin, chacune de ces plateformes conviendrait. Notre besoin est simple, dans la mesure où nous n'avons pas besoin de démarrer un simulateur pour les tests d'intégration et que nous ne publions pas sur les stores.
+
+Ceci dit, en prévision d'évolutions ultérieures, je vais vous proposer [Codemagic](https://codemagic.io/). Codemagic me parait mieux intégrée à l'écosystème Flutter que les autres plateformes. Codemagic publie beaucoup d'articles de qualité sur Flutter et est régulièrement cité par le framework. Par ailleurs, ayant configuré des tests d'intégration dans Github Action et dans Codemagic, mon retour d'expérience est que la facilité d'installation de Codemagic est sans commune mesure avec Github Actions (qui est une plateforme plus générale, polyvalente).
+
+Notre CI se décomposera en 2 phases:
+
+1. exécution de l'analyse statique de code au moyen de la commande `flutter analyze` fournie par `flutter_lints`
+2. exécution des tests unitaires et des tests de widget au moyen de la commande `flutter test`
+
+En suivant [la procédure d'installation](https://docs.codemagic.io/getting-started/adding-apps/) documentée par Codemagic, liez votre dépôt Github à Codemagic.
+
+Puis créez un fichier `codemagic.yaml` à la racine de votre projet. Ce fichier est le fichier de configuration de votre pipeline.
+
+```yaml
+# yaml-language-server: $schema=https://static.codemagic.io/codemagic-schema.json
+workflows:
+  ci:
+    name: CI
+    instance_type: mac_mini_m1
+    max_build_duration: 15
+    environment:
+      flutter: 3.10.0
+      xcode: latest
+    cache:
+      cache_paths:
+        - ~/.pub-cache
+    triggering:
+      events:
+        - push
+      cancel_previous_builds: false
+    scripts:
+      - name: Lint
+        script: flutter analyze
+      - name: Test
+        script: |
+          mkdir -p test-results
+          flutter test --machine > test-results/tests.json
+        test_report: test-results/tests.json
+```
+
+Dans l'interface de Codemagic, cliquez sur `Switch to YAML configuration`, puis sur le bouton `Start your first build`.
+
+![Tableau de bord Codemagic](./assets/codemagic.png)
+
+Votre pipeline va démarrer et devrait, sauf effet démo malencontreux, se terminer de la meilleure des manières: verte !
+
+![résultat pipeline codemagic](./assets/pipeline.png)
+
+Pour automatiser la pipeline lors de chaque commit vous devez configurer un webhook sur votre dépôt, comme le mentionne la [documentation Codemagic](https://docs.codemagic.io/yaml-running-builds/webhooks/).
 
 <!-- ------------------------ -->
 
@@ -1087,7 +1145,7 @@ Duration: 2
 
 Félicitations !
 
-Vous venez de réaliser un métronome avc Flutter, en veillant à tester les fontionnalités de votre application et en intégrant ces tests dans une pipeline d'intégration continue.
+Vous venez de réaliser un métronome avec Flutter, en veillant à tester les fontionnalités de votre application et en intégrant ces tests dans une pipeline d'intégration continue.
 
 A partir de là, le champ des possibles est ouvert. On peut imaginer par exemple mettre en place une pipeline de déploiement continu au moyen de Codemagic, afin de publier automatiquement sur Android et iOS.
 
