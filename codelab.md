@@ -14,25 +14,66 @@ Feedback Link: https://github.com/Zenika/codelab-flutter-metronome/issues
 
 Duration: 2
 
+### Présentation de Flutter
+
 ![Logo Flutter](./assets/flutter-logo.png)
+
+[Flutter](https://flutter.dev/) est un framework open-source développé par Google qui permet de créer des applications mobiles multiplateformes. Voici quelques points clés concernant Flutter :
+
+**Développement multiplateforme:** Flutter permet aux développeurs de créer des applications pour différentes plateformes telles qu'Android, iOS, le web, Windows, macOS, Linux en utilisant un seul code source.
+
+**Langage de programmation:** Flutter utilise le langage de programmation [Dart](https://dart.dev/), qui est également développé par Google. Dart est un langage moderne avec des fonctionnalités telles que le typage statique et la gestion automatique de la mémoire.
+
+**Interface utilisateur réactive:** Flutter propose un moteur de rendu personnalisé qui permet la création d'interfaces utilisateur réactives. Cela garantit des performances élevées et une expérience utilisateur fluide. Flutter propose une vaste collection de widgets pré-construits et personnalisables. Les développeurs peuvent personnaliser l'apparence et le comportement des widgets selon leurs besoins spécifiques.
+
+**Communauté active:** Flutter bénéficie d'une communauté de développeurs active, ce qui offre un accès à de nombreux packages, tutoriels et ressources pour faciliter le développement d'applications.
+
+**Intégration native:** Flutter permet l'accès aux fonctionnalités natives des différentes plateformes grâce à des plugins. Cela permet aux développeurs d'intégrer des fonctionnalités spécifiques à chaque plateforme, telles que l'appareil photo, le GPS, les notifications push, etc.
+
+**Expérience de développement rapide:** Flutter offre une fonctionnalité de Hot Reload, qui permet aux développeurs de voir les résultats immédiatement lorsqu'ils apportent des modifications à leur code, sans avoir à recompiler toute l'application. Cela facilite un processus de développement itératif et accélère la création d'applications.
 
 ### Ce que vous allez réaliser
 
-<img src="./assets/layout_phone.png" width="300">
+Vous allez réaliser un métronome avec Flutter.
+
+L'interface utilisateur sera simple, intuitive, comme le montre cette capture d'écran:
+
+<img src="./assets/app-ui.gif" width="300">
+
+### Ce que vous apprendrez
+
+- ✅ utiliser les types de widgets les plus répandus dans Flutter (Stateless, Stateful, Inherited)
+- ✅ rendre une application responsive
+- ✅ tester votre application
+- ✅ mettre en place une pipeline d'intégration continue
 
 <!-- ------------------------ -->
 
-## Configurer l’environnement
+## Créer l'application
 
 Duration: 1
 
+### Cas 1: Flutter EST INSTALLÉ sur votre poste
+
+Flutter doit être correctement installé sur votre poste.
+
+En particulier, la commande `flutter doctor` ne doit pas renvoyer d'erreur.
+
+![résultat flutter doctor](./assets/doctor.png)
+
+J'utilise la version `3.10` de Flutter, et donc Dart 3. La très grande majorité du code de l'application est compatible avec Dart `> 2.12`. Les tests sont à priori le seul endroit où j'ai utilisé des Records et des Patterns (fonctionnalités de Dart non disponibles dans Dart 2). Si vous êtes encore sur Dart 2, je vous recommande donc de mettre à jour Flutter, ou éventuellement adapter les sections de ce codelab qui ne compileront pas à cause d'API incompatibles.
+
+Si tout est OK, vous pouvez directement créer votre application.
+
 ```
-flutter doctor
 flutter create metronome
-cd metronome
-rm lib/main.dart
-rm -rf test
 ```
+
+Une fois votre application générée, vous pouvez supprimer le dossier `test` et le fichier `lib/main.dart`.
+
+### Cas 2: Flutter N'EST PAS INSTALLÉ sur votre poste
+
+Si vous n'avez pas encore Flutter, je vous invite à suivre les [instructions de démarrage officielles](https://docs.flutter.dev/get-started/install) jusqu'à ce que vous puissiez lancer la commande `flutter doctor` sans erreur.
 
 <!-- ------------------------ -->
 
