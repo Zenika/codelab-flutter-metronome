@@ -376,6 +376,8 @@ class App extends StatelessWidget {
 
 Duration: 10
 
+![Métronome responsive](./assets/responsive.gif)
+
 Pour rendre une application Flutter responsive, vous disposez de plusieurs moyens. Voici 2 moyens possibles:
 
 - [MediaQuery.of()](https://api.flutter.dev/flutter/widgets/MediaQuery-class.html): cela permet de récupérer des informations sur la taille de l'écran et d'autres caractéristiques de l'appareil.
@@ -552,6 +554,8 @@ class AudioPlayerProvider extends InheritedWidget {
 }
 ```
 
+[InheritedWidget](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html) est une classe qui permet de partager des données entre plusieurs widgets descendants sans avoir à les passer explicitement de parent en enfant.
+
 ### Injecter AudioPlayerProvider dans l'application
 
 ```dart
@@ -640,6 +644,8 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
   }
 }
 ```
+
+La méthode [didChangeDependencies](https://api.flutter.dev/flutter/widgets/State/didChangeDependencies.html) est une méthode du cycle de vie d'un StatefulWidget. L'utilisation de didChangeDependencies est utile lorsque vous avez besoin de réagir aux changements de données provenant de InheritedWidgets et de mettre à jour l'état du widget en conséquence. `didChangeDependencies` est aussi appelée lors de la création initiale du widget.
 
 <aside class="negative">
 Comme nous venons de modifier le point d'entrée de notre application et que nous avons ajouté une nouvelle ressource, il est important que vous interrompiez votre application en cours d'exécution, et que vous la redémarriez complètement.
