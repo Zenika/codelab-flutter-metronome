@@ -350,7 +350,20 @@ class App extends StatelessWidget {
 
 Duration: 10
 
-### Utiliser le widget LayoutBuilder
+Pour rendre une application Flutter responsive, vous disposez de plusieurs moyens. Voici 2 moyens possibles:
+
+- [MediaQuery.of()](https://api.flutter.dev/flutter/widgets/MediaQuery-class.html): cela permet de récupérer des informations sur la taille de l'écran et d'autres caractéristiques de l'appareil.
+- le widget [LayoutBuilder](https://api.flutter.dev/flutter/widgets/LayoutBuilder-class.html): il permet d'obtenir des informations sur la taille disponible dans le **widget parent** et de personnaliser la mise en page en conséquence.
+
+Il existe d'autres possibilités. N'hésitez pas à lire la [documentation officielle](https://docs.flutter.dev/ui/layout/adaptive-responsive) pour plus de détails sur le sujet.
+
+### Utilisation du widget LayoutBuilder
+
+Le LayoutBuilder est un widget qui prend une fonction de rappel (callback) en tant que paramètre, et cette fonction sera invoquée à chaque fois que la taille du widget parent change. La fonction de rappel reçoit deux paramètres : le contexte ([BuildContext](https://api.flutter.dev/flutter/widgets/BuildContext-class.html)) et les contraintes ([BoxConstraints](https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html)).
+
+Les contraintes (`BoxConstraints`) fournissent des informations sur l'espace disponible pour le widget `LayoutBuilder`. Vous pouvez utiliser ces informations pour ajuster la taille et la disposition des enfants du LayoutBuilder.
+
+Dans cet application, le `LayoutBuilder` examine la largeur maximale disponible dans le widget parent. Si cette largeur est supérieure à **500** pixels, on passe en mode `Row`, sinon on reste en mode `Column`..
 
 ```dart
 // lib/ui/app.dart
