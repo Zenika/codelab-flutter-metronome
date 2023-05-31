@@ -94,6 +94,8 @@ void main() {
 }
 ```
 
+La méthode [runApp](https://api.flutter.dev/flutter/widgets/runApp.html) est une fonction clé dans Flutter qui permet de démarrer l'exécution de l'application. Elle est utilisée pour exécuter le widget racine de l'application et initialiser le processus de rendu de l'interface utilisateur.
+
 ```dart
 // lib/ui/app.dart
 
@@ -118,6 +120,14 @@ class App extends StatelessWidget {
 }
 ```
 
+Le widget `App` étend [StatelessWidget](https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html).
+
+[StatelessWidget](https://api.flutter.dev/flutter/widgets/StatelessWidget-class.html) (widget sans état) est l'un des types de widgets de base dans Flutter. Un `StatelessWidget` est un widget immuable qui ne maintient pas d'état interne et dont l'interface utilisateur dépend uniquement des propriétés fournies lors de sa création. Il est souvent utilisé pour représenter des parties statiques de l'interface utilisateur et pour encapsuler des widgets réutilisables. Il nécessite une méthode obligatoire [build](https://api.flutter.dev/flutter/widgets/StatelessWidget/build.html) qui est responsable de la construction de la représentation visuelle du widget. La méthode [build](https://api.flutter.dev/flutter/widgets/StatelessWidget/build.html) prend un argument [BuildContext](https://api.flutter.dev/flutter/widgets/BuildContext-class.html) et doit retourner un arbre de widgets.
+
+Le widget [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) renvoyé par la méthode `build` est généralement utilisé comme point d'entrée. Il crée un widget racine qui contient toute l'application et configure diverses fonctionnalités telles que la navigation, le thème et la localisation.
+
+Le widget [Scaffold](https://api.flutter.dev/flutter/material/Scaffold-class.html) fournit une structure de base pour les mises en page courantes de l'application. Il crée une interface utilisateur basée sur Material Design et fournit des éléments tels qu'une barre d'applications, un menu de navigation latérale, un "body", des actions flottantes, etc.
+
 ### Afficher le rythme du métronome
 
 ```dart
@@ -139,6 +149,8 @@ class RhythmLabel extends StatelessWidget {
   }
 }
 ```
+
+La méthode [Theme.of(context)](https://api.flutter.dev/flutter/material/Theme/of.html) est utilisée pour accéder au thème actuel à partir d'un certain contexte. Le contexte est une référence à l'emplacement actuel dans l'arbre des widgets, et [Theme.of(context)](https://api.flutter.dev/flutter/material/Theme/of.html) remonte l'arbre des widgets à la recherche du widget [Theme](https://api.flutter.dev/flutter/material/Theme-class.html) le plus proche et renvoie le thème associé à ce widget.
 
 ```dart
 // lib/ui/app.dart
@@ -208,6 +220,10 @@ class RhythmSlider extends StatelessWidget {
 }
 ```
 
+Le widget [Slider](https://api.flutter.dev/flutter/material/Slider-class.html) est un élément interactif qui permet à l'utilisateur de sélectionner une valeur numérique dans une plage donnée en faisant glisser un curseur le long d'une piste.
+
+Pour le moment, son contenu est statique. Nous le modifierons ultérieurement.
+
 ```dart
 // lib/ui/app.dart
 import 'package:flutter/material.dart';
@@ -237,6 +253,10 @@ class App extends StatelessWidget {
   }
 }
 ```
+
+Le widget [Column](https://api.flutter.dev/flutter/widgets/Column-class.html) prend une liste de widgets enfants et les dispose de manière verticale, en prenant en compte la taille et les contraintes de chaque enfant.
+
+Le widget [Padding](https://api.flutter.dev/flutter/widgets/Padding-class.html) prend la propriété padding qui définit les marges intérieures. Vous pouvez utiliser la classe [EdgeInsets](https://api.flutter.dev/flutter/painting/EdgeInsets-class.html) pour spécifier la taille des marges.
 
 ### Afficher le bouton permettant de démarrer/arrêter le métronome
 
@@ -271,6 +291,12 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
   }
 }
 ```
+
+Un [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) est une classe en Flutter qui représente un widget dont l'état peut être modifié pendant l'exécution de l'application. Contrairement aux `StatelessWidget`, qui sont immuables une fois créés, les `StatefulWidget` peuvent changer leur apparence ou leur comportement en réponse à des événements ou à des modifications de données.
+
+La classe [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) est composée de deux parties principales : le widget lui-même, qui est responsable de la création de l'interface utilisateur, et un objet [State](https://api.flutter.dev/flutter/widgets/State-class.html), qui gère l'état interne du widget et sa logique. L'objet State est créé et associé au widget lors de l'appel à la méthode createState() du widget.
+
+Depuis la fonction de rappel `onPressed` de notre bouton, la méthode [setState](https://api.flutter.dev/flutter/widgets/State/setState.html) est invoquée. Elle permet de notifier Flutter que l'état interne de notre `StatefulWidget` a été modifié et que le widget doit être reconstruit pour refléter ces changements.
 
 ```dart
 // lib/ui/app.dart
