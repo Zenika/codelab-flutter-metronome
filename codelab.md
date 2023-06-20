@@ -97,7 +97,7 @@ void main() {
 La méthode [runApp](https://api.flutter.dev/flutter/widgets/runApp.html) est une fonction clé dans Flutter qui permet de démarrer l'exécution de l'application. Elle est utilisée pour exécuter le widget racine de l'application et initialiser le processus de rendu de l'interface utilisateur.
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 
 import 'package:flutter/material.dart';
 
@@ -338,7 +338,7 @@ class App extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
 import 'package:metronome/ui/rhythm_slider.dart';
-import 'package:metronome/ui/sound_toggle_button.dart'; // importer SoundToggleButton
+import 'package:metronome/ui/sound_toggle_button.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -359,7 +359,7 @@ class App extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: RhythmSlider(),
             ),
-            SoundToggleButton(), // utiliser SoundToggleButton
+            SoundToggleButton(),
           ],
         ),
       ),
