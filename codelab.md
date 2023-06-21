@@ -494,9 +494,9 @@ flutter pub add audioplayers
 
 Télécharger le fichier MP3 au moyen du lien suivant:
 
-<a href="https://github.com/Zenika/codelab-flutter-metronome/tree/main/assets/metronome-sound.mp3" download>Télécharger le son du métronome</a>
+<a href="https://github.com/Zenika/codelab-flutter-metronome/tree/main/metronome-sound.mp3" download>Télécharger le son du métronome</a>
 
-Placez ce fichier dans le dossier `assets` à la racine de votre projet. Le nom du dossier est important. Son nommage est contraint par la librairie `audioplayers` que nous utilisons.
+Créez un dossier `assets` à la racine du projet et placez ce fichier dans ce dossier. Le nom du dossier est important. Son nommage est contraint par la librairie `audioplayers` que nous utilisons.
 
 Modifiez ensuite le fichier `pubspec.yaml` afin que Flutter ait connaissance de cette ressource locale. Renseignez dans ce fichier une nouvelle entrée au niveau du paramètre `flutter.assets`:
 
