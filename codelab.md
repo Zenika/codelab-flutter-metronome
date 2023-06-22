@@ -153,7 +153,7 @@ class RhythmLabel extends StatelessWidget {
 La méthode [Theme.of(context)](https://api.flutter.dev/flutter/material/Theme/of.html) est utilisée pour accéder au thème actuel à partir d'un certain contexte. Le contexte est une référence à l'emplacement actuel dans l'arbre des widgets, et [Theme.of(context)](https://api.flutter.dev/flutter/material/Theme/of.html) remonte l'arbre des widgets à la recherche du widget [Theme](https://api.flutter.dev/flutter/material/Theme-class.html) le plus proche et renvoie le thème associé à ce widget.
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart'; // importer RhythmLabel
@@ -225,7 +225,7 @@ Le widget [Slider](https://api.flutter.dev/flutter/material/Slider-class.html) e
 Pour le moment, son contenu est statique. Nous le modifierons ultérieurement.
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
 import 'package:metronome/ui/rhythm_slider.dart'; // importer RhythmSlider
@@ -299,7 +299,7 @@ La classe [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidge
 Depuis la fonction de rappel `onPressed` de notre bouton, la méthode [setState](https://api.flutter.dev/flutter/widgets/State/setState.html) est invoquée. Elle permet de notifier Flutter que l'état interne de notre `StatefulWidget` a été modifié et que le widget doit être reconstruit pour refléter ces changements.
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
@@ -333,7 +333,7 @@ class App extends StatelessWidget {
 ### Ajuster le thème général
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
@@ -394,7 +394,7 @@ Les contraintes (`BoxConstraints`) fournissent des informations sur l'espace dis
 Dans cet application, le `LayoutBuilder` examine la largeur maximale disponible dans le widget parent. Si cette largeur est supérieure à **500** pixels, on passe en mode `Row`, sinon on reste en mode `Column`..
 
 ```dart
-// lib/ui/app.dart
+// lib/app.dart
 
 import 'package:flutter/material.dart';
 import 'package:metronome/ui/rhythm_label.dart';
@@ -563,7 +563,7 @@ class AudioPlayerProvider extends InheritedWidget {
 
 import 'package:flutter/material.dart';
 import 'package:metronome/audio_player_provider.dart';
-import 'package:metronome/ui/app.dart';
+import 'package:metronome/app.dart';
 
 // le point d'entrée de l'application devient asynchone afin que audioplayers charge correctement le son
 void main() async {
@@ -775,7 +775,7 @@ class RhythmProviderState extends State<RhythmProvider> {
 import 'package:flutter/material.dart';
 import 'package:metronome/audio_player_provider.dart';
 import 'package:metronome/store/rhythm_provider.dart';
-import 'package:metronome/ui/app.dart';
+import 'package:metronome/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -1018,7 +1018,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metronome/audio_player_provider.dart';
 import 'package:metronome/constants.dart';
 import 'package:metronome/store/rhythm_provider.dart';
-import 'package:metronome/ui/app.dart';
+import 'package:metronome/app.dart';
 import 'package:metronome/ui/sound_toggle_button.dart';
 import 'package:mocktail/mocktail.dart';
 
