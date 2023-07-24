@@ -196,6 +196,8 @@ const kPlayIcon = Icons.play_arrow;
 
 // icône du bouton "pause"
 const kPauseIcon = Icons.pause;
+
+final soundSource = AssetSource('metronome-sound.mp3');
 ```
 
 ### Afficher le "slider" permettant de modifier le rythme
@@ -535,7 +537,7 @@ class AudioPlayerProvider extends InheritedWidget {
       ..setPlayerMode(
         PlayerMode.lowLatency,
       );
-    await audioPlayer.setSource(AssetSource('metronome-sound.mp3'));
+    
     return audioPlayer;
   }
 
@@ -614,8 +616,9 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
       SoundToggleButton.getRhythmInterval(50),
       (_) {
         if (isPlaying) {
-          audioPlayer.stop();
-          audioPlayer.resume();
+          audioPlayer.pause();
+          audioPlayer.seek(Duration.zero);
+          audioPlayer.play(soundSource);
         }
       },
     );
@@ -624,6 +627,9 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
 
   @override
   void dispose() {
+    final audioPlayer = AudioPlayerProvider.of(context).audioPlayer;
+    audioPlayer.dispose();
+    
     periodicTimer?.cancel();
     super.dispose();
   }
@@ -1027,8 +1033,11 @@ class MockAudioPlayer extends Mock implements AudioPlayer {}
 createApp() {
   final audioPlayer = MockAudioPlayer();
 
-  when(() => audioPlayer.stop()).thenAnswer((_) async {});
-  when(() => audioPlayer.resume()).thenAnswer((_) async {});
+  when(() => audioPlayer.pause()).thenAnswer((_) async {});
+  when(() => audioPlayer.seek(Duration.zero)).thenAnswer((_) async {});
+  when(() => audioPlayer.play(soundSource)).thenAnswer((_) async {
+    return;
+  });
 
   return (
     app: AudioPlayerProvider(
@@ -1101,11 +1110,14 @@ void main () {
     );
 
     await tester.pump(SoundToggleButton.getRhythmInterval(kDefaultRhythm) * 2);
+   
     verifyInOrder([
-      () => audioPlayer.stop(),
-      () => audioPlayer.resume(),
-      () => audioPlayer.stop(),
-      () => audioPlayer.resume(),
+      () => audioPlayer.pause(),
+      () => audioPlayer.seek(Duration.zero),
+      () => audioPlayer.play(soundSource),
+      () => audioPlayer.pause(),
+      () => audioPlayer.seek(Duration.zero),
+      () => audioPlayer.play(soundSource),
     ]);
 
     await tester.tap(find.byIcon(kPauseIcon));
@@ -1145,8 +1157,7 @@ void main() {
     await tester.tap(find.byIcon(kPlayIcon));
 
     await tester.pump(SoundToggleButton.getRhythmInterval(kMinRhythm) * 5);
-    verify(() => audioPlayer.stop()).called(5);
-    verify(() => audioPlayer.resume()).called(5);
+    verify(() => audioPlayer.play(soundSource)).called(5);
   });
 }
 ```
